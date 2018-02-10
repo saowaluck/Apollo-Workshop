@@ -13,6 +13,12 @@ const Post = {
         return posts
     },
 
+    listByUserId: async(userId)=>{
+        if(!userId){ return []}
+        const posts = await db('posts').where({userId})
+        return posts
+    },
+
     create: async(userId, title, content) => {
         const ids = await db('posts')
         .insert({

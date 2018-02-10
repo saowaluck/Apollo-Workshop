@@ -5,11 +5,20 @@ const userRoute = require('./routes/users')
 
 const app = express()
 
+const graphqlHTTP = require('express-graphql');
+const schema = require('./schema')
+
 const Post = require('./models/Post')
 const User = require('./models/User')
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
+
+
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    graphiql: true
+}))
 
 const authMiddleware = async(req, res, next) =>{
     const token = req.query.token || req.headers.authorization
@@ -27,6 +36,8 @@ const authMiddleware = async(req, res, next) =>{
 //     res.json('hi')
 //     // res.json('topic: hi')
 // })
+
+
 app.use(authMiddleware)
 app.use('/', postRoute)
 app.use('/', userRoute)
