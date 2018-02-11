@@ -15,10 +15,19 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 
-app.use('/graphql', graphqlHTTP({
-    schema: schema,
-    graphiql: true
+// app.use('/graphql', graphqlHTTP({
+//     schema: schema,
+//     graphiql: true
+// }))
+
+const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
+app.use('/graphql', graphqlExpress({
+    schema
 }))
+app.use('/graphiql', graphiqlExpress({
+    endpointURL: '/graphql'
+}))
+
 
 const authMiddleware = async(req, res, next) =>{
     const token = req.query.token || req.headers.authorization
@@ -43,4 +52,5 @@ app.use('/', postRoute)
 app.use('/', userRoute)
 
 // 
+
 app.listen(9000)
